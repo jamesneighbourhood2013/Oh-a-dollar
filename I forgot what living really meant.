@@ -7,28 +7,94 @@ screenGui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGu
 -- Create Frame (Menu container)
 local menuFrame = Instance.new("Frame")
 menuFrame.Name = "MenuFrame"
-menuFrame.Size = UDim2.new(0, 200, 0, 290) -- taller to fit 6 buttons
-menuFrame.Position = UDim2.new(0, 10, 0, 10)
+menuFrame.Size = UDim2.new(0, 230, 0, 340)
+menuFrame.Position = UDim2.new(0, 15, 0, 15)
 menuFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 menuFrame.BorderSizePixel = 0
+menuFrame.Active = true
+menuFrame.Draggable = true
 menuFrame.Parent = screenGui
 
--- UI Corner for rounded edges (optional)
+-- Rounded corners
 local corner = Instance.new("UICorner")
 corner.CornerRadius = UDim.new(0, 8)
 corner.Parent = menuFrame
 
--- Layout for spacing buttons
-local layout = Instance.new("UIListLayout")
-layout.Padding = UDim.new(0, 5)
-layout.FillDirection = Enum.FillDirection.Vertical
-layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-layout.VerticalAlignment = Enum.VerticalAlignment.Top
-layout.SortOrder = Enum.SortOrder.LayoutOrder
-layout.Parent = menuFrame
+-- Tab Buttons Container
+local tabContainer = Instance.new("Frame")
+tabContainer.Name = "TabContainer"
+tabContainer.Size = UDim2.new(1, 0, 0, 40)
+tabContainer.BackgroundTransparency = 1
+tabContainer.Parent = menuFrame
+
+-- Tab Buttons Layout
+local tabLayout = Instance.new("UIListLayout")
+tabLayout.FillDirection = Enum.FillDirection.Horizontal
+tabLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+tabLayout.SortOrder = Enum.SortOrder.LayoutOrder
+tabLayout.Padding = UDim.new(0, 5)
+tabLayout.Parent = tabContainer
+
+-- Create Button Panel
+local buttonPanel = Instance.new("Frame")
+buttonPanel.Name = "ButtonPanel"
+buttonPanel.Size = UDim2.new(1, 0, 1, -50)
+buttonPanel.Position = UDim2.new(0, 0, 0, 45)
+buttonPanel.BackgroundTransparency = 1
+buttonPanel.Parent = menuFrame
+
+-- Function to create tab buttons
+local tabs = {}
+local currentTab = nil
+
+local function switchTab(tabName)
+	for name, container in pairs(tabs) do
+		container.Visible = (name == tabName)
+	end
+	currentTab = tabName
+end
+
+local function createTab(name)
+	local button = Instance.new("TextButton")
+	button.Name = name .. "Tab"
+	button.Size = UDim2.new(0, 60, 1, 0)
+	button.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+	button.TextColor3 = Color3.new(1, 1, 1)
+	button.Font = Enum.Font.SourceSansBold
+	button.TextSize = 16
+	button.Text = name
+	button.Parent = tabContainer
+
+	local tabCorner = Instance.new("UICorner")
+	tabCorner.CornerRadius = UDim.new(0, 6)
+	tabCorner.Parent = button
+
+	local container = Instance.new("Frame")
+	container.Name = name .. "Container"
+	container.Size = UDim2.new(1, 0, 1, 0)
+	container.BackgroundTransparency = 1
+	container.Visible = false
+	container.Parent = buttonPanel
+
+	local layout = Instance.new("UIListLayout")
+	layout.Padding = UDim.new(0, 5)
+	layout.FillDirection = Enum.FillDirection.Vertical
+	layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+	layout.VerticalAlignment = Enum.VerticalAlignment.Top
+	layout.SortOrder = Enum.SortOrder.LayoutOrder
+	layout.Parent = container
+
+	tabs[name] = container
+
+	button.MouseButton1Click:Connect(function()
+		switchTab(name)
+	end)
+
+	return container
+end
 
 -- Button creation helper
-local function createButton(name, text, onClick)
+local function createButton(parent, name, text, onClick)
 	local button = Instance.new("TextButton")
 	button.Name = name
 	button.Size = UDim2.new(0, 180, 0, 40)
@@ -37,7 +103,7 @@ local function createButton(name, text, onClick)
 	button.Font = Enum.Font.SourceSans
 	button.TextSize = 20
 	button.Text = text
-	button.Parent = menuFrame
+	button.Parent = parent
 
 	local btnCorner = Instance.new("UICorner")
 	btnCorner.CornerRadius = UDim.new(0, 6)
@@ -46,76 +112,133 @@ local function createButton(name, text, onClick)
 	button.MouseButton1Click:Connect(onClick)
 end
 
--- === 6 Buttons Below: Add your code in the functions ===
+-- === Create Tabs ===
+local dupeTab = createTab("Dupe")
+local mainTab = createTab("Main")
+local miscTab = createTab("Misc")
 
-createButton("Button1", "Wipe Potion Dupe", function()
+-- === Dupe Buttons ===
+createButton(dupeTab, "DupeButton1", "Wipe Potion Dupe", function()
 	print("Button 1 clicked")
 	local args = {
-    [1] = "HUD",
-    [2] = "Inventory",
-    [3] = "Drop",
-    [4] = "Wipe Potion", -- item name
-    [5] = -1/0
-}
-game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
+		[1] = "HUD",
+		[2] = "Inventory",
+		[3] = "Drop",
+		[4] = "Wipe Potion",
+		[5] = -1/0
+	}
+	game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
 end)
 
-createButton("Button2", "Muzan Blood Dupe", function()
+createButton(dupeTab, "DupeButton2", "Muzan Blood Dupe", function()
 	print("Button 2 clicked")
 	local args = {
-    [1] = "HUD",
-    [2] = "Inventory",
-    [3] = "Drop",
-    [4] = "Muzan Blood", -- item name
-    [5] = -1/0
-}
-game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
+		[1] = "HUD",
+		[2] = "Inventory",
+		[3] = "Drop",
+		[4] = "Muzan Blood",
+		[5] = -1/0
+	}
+	game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
 end)
 
-createButton("Button3", "Meat Dupe", function()
+createButton(dupeTab, "DupeButton3", "Meat Dupe", function()
 	print("Button 3 clicked")
 	local args = {
-    [1] = "HUD",
-    [2] = "Inventory",
-    [3] = "Drop",
-    [4] = "Meat", -- item name
-    [5] = -1/0
-}
-game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
+		[1] = "HUD",
+		[2] = "Inventory",
+		[3] = "Drop",
+		[4] = "Meat",
+		[5] = -1/0
+	}
+	game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
 end)
 
-createButton("Button4", "Premium Meat Dupe", function()
+createButton(dupeTab, "DupeButton4", "Premium Meat Dupe", function()
 	print("Button 4 clicked")
 	local args = {
-    [1] = "HUD",
-    [2] = "Inventory",
-    [3] = "Drop",
-    [4] = "Premium Meat", -- item name
-    [5] = -1/0
-}
-game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
+		[1] = "HUD",
+		[2] = "Inventory",
+		[3] = "Drop",
+		[4] = "Premium Meat",
+		[5] = -1/0
+	}
+	game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
 end)
 
-createButton("Button5", "Perfect Crystal Dupe", function()
+createButton(dupeTab, "DupeButton5", "Perfect Crystal Dupe", function()
 	print("Button 5 clicked")
 	local args = {
-    [1] = "HUD",
-    [2] = "Inventory",
-    [3] = "Drop",
-    [4] = "Perfect Crystal", -- item name
-    [5] = -1/0
-}
-game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
+		[1] = "HUD",
+		[2] = "Inventory",
+		[3] = "Drop",
+		[4] = "Perfect Crystal",
+		[5] = -1/0
+	}
+	game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
 end)
 
-createButton("Button6", "Combat Potion Dupe", function()
+createButton(dupeTab, "DupeButton6", "Combat Potion Dupe", function()
 	print("Button 6 clicked")
 	local args = {
-    [1] = "HUD",
-    [2] = "Inventory",
-    [3] = "Drop",
-    [4] = "Combat Potion", -- item name
-    [5] = -1/0
-}
-game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
+		[1] = "HUD",
+		[2] = "Inventory",
+		[3] = "Drop",
+		[4] = "Combat Potion",
+		[5] = -1/0
+	}
+	game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
 end)
+
+-- === Main Buttons ===
+createButton(mainTab, "MainButton1", "Sword Equip", function()
+	print("Main Button 1 clicked")
+end)
+
+createButton(mainTab, "MainButton2", "Train Skill", function()
+	print("Main Button 2 clicked")
+end)
+
+createButton(mainTab, "MainButton3", "Use Elixir", function()
+	print("Main Button 3 clicked")
+end)
+
+createButton(mainTab, "MainButton4", "Join Party", function()
+	print("Main Button 4 clicked")
+end)
+
+createButton(mainTab, "MainButton5", "Accept Quest", function()
+	print("Main Button 5 clicked")
+end)
+
+createButton(mainTab, "MainButton6", "Fast Travel", function()
+	print("Main Button 6 clicked")
+end)
+
+-- === Misc Buttons ===
+createButton(miscTab, "MiscButton1", "Misc1", function()
+	print("Misc Button 1 clicked")
+end)
+
+createButton(miscTab, "MiscButton2", "Misc2", function()
+	print("Misc Button 2 clicked")
+end)
+
+createButton(miscTab, "MiscButton3", "Misc3", function()
+	print("Misc Button 3 clicked")
+end)
+
+createButton(miscTab, "MiscButton4", "Misc4", function()
+	print("Misc Button 4 clicked")
+end)
+
+createButton(miscTab, "MiscButton5", "Misc5", function()
+	print("Misc Button 5 clicked")
+end)
+
+createButton(miscTab, "MiscButton6", "Misc6", function()
+	print("Misc Button 6 clicked")
+end)
+
+-- Set default tab
+switchTab("Main")
