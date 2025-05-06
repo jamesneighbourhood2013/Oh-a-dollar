@@ -85,3 +85,9 @@ createButton("Button3", "Meat dupe", function()
 }
 game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
 end)
+createButton("Button6", "Button 6", function()
+	
+
+print("Button 6 clicked")
+	-- Insert your Button 6 code here
+end)
