@@ -62,7 +62,7 @@ createButton("Button1", "Wipe Potion dupe", function()
 game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
 end)
 
-createButton("Button2", "Muzan Blood dupe", function()
+createButton("Button2", "Mizan Blood dupe", function()
 	print("Button 2 clicked")
 	local args = {
     [1] = "HUD",
