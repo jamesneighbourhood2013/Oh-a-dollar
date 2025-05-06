@@ -7,13 +7,13 @@ screenGui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGu
 -- Create Frame (Menu container)
 local menuFrame = Instance.new("Frame")
 menuFrame.Name = "MenuFrame"
-menuFrame.Size = UDim2.new(0, 200, 0, 140)
+menuFrame.Size = UDim2.new(0, 200, 0, 290) -- taller to fit 6 buttons
 menuFrame.Position = UDim2.new(0, 10, 0, 10)
 menuFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 menuFrame.BorderSizePixel = 0
 menuFrame.Parent = screenGui
 
--- UI Corner for rounded edges (optional aesthetic)
+-- UI Corner for rounded edges (optional)
 local corner = Instance.new("UICorner")
 corner.CornerRadius = UDim.new(0, 8)
 corner.Parent = menuFrame
@@ -39,18 +39,16 @@ local function createButton(name, text, onClick)
 	button.Text = text
 	button.Parent = menuFrame
 
-	-- Optional corner style
 	local btnCorner = Instance.new("UICorner")
 	btnCorner.CornerRadius = UDim.new(0, 6)
 	btnCorner.Parent = button
 
-	-- Function when clicked
 	button.MouseButton1Click:Connect(onClick)
 end
 
--- === Add your custom code inside these functions ===
+-- === 6 Buttons Below: Add your code in the functions ===
 
-createButton("Button1", "Wipe Potion dupe", function()
+createButton("Button1", "Wipe Potion Dupe", function()
 	print("Button 1 clicked")
 	local args = {
     [1] = "HUD",
@@ -62,7 +60,7 @@ createButton("Button1", "Wipe Potion dupe", function()
 game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
 end)
 
-createButton("Button2", "Mizan Blood dupe", function()
+createButton("Button2", "Muzan Blood Dupe", function()
 	print("Button 2 clicked")
 	local args = {
     [1] = "HUD",
@@ -74,7 +72,7 @@ createButton("Button2", "Mizan Blood dupe", function()
 game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
 end)
 
-createButton("Button3", "Meat dupe", function()
+createButton("Button3", "Meat Dupe", function()
 	print("Button 3 clicked")
 	local args = {
     [1] = "HUD",
@@ -85,9 +83,39 @@ createButton("Button3", "Meat dupe", function()
 }
 game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
 end)
-createButton("Button6", "Button 6", function()
-	
 
-print("Button 6 clicked")
-	-- Insert your Button 6 code here
+createButton("Button4", "Premium Meat Dupe", function()
+	print("Button 4 clicked")
+	local args = {
+    [1] = "HUD",
+    [2] = "Inventory",
+    [3] = "Drop",
+    [4] = "Premium Meat", -- item name
+    [5] = -1/0
+}
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
+end)
+
+createButton("Button5", "Perfect Crystal Dupe", function()
+	print("Button 5 clicked")
+	local args = {
+    [1] = "HUD",
+    [2] = "Inventory",
+    [3] = "Drop",
+    [4] = "Perfect Crystal", -- item name
+    [5] = -1/0
+}
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
+end)
+
+createButton("Button6", "Combat Potion Dupe", function()
+	print("Button 6 clicked")
+	local args = {
+    [1] = "HUD",
+    [2] = "Inventory",
+    [3] = "Drop",
+    [4] = "Combat Potion", -- item name
+    [5] = -1/0
+}
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
 end)
