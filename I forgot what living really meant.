@@ -1,0 +1,87 @@
+-- Create ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "SimpleMenu"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+
+-- Create Frame (Menu container)
+local menuFrame = Instance.new("Frame")
+menuFrame.Name = "MenuFrame"
+menuFrame.Size = UDim2.new(0, 200, 0, 140)
+menuFrame.Position = UDim2.new(0, 10, 0, 10)
+menuFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+menuFrame.BorderSizePixel = 0
+menuFrame.Parent = screenGui
+
+-- UI Corner for rounded edges (optional aesthetic)
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 8)
+corner.Parent = menuFrame
+
+-- Layout for spacing buttons
+local layout = Instance.new("UIListLayout")
+layout.Padding = UDim.new(0, 5)
+layout.FillDirection = Enum.FillDirection.Vertical
+layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+layout.VerticalAlignment = Enum.VerticalAlignment.Top
+layout.SortOrder = Enum.SortOrder.LayoutOrder
+layout.Parent = menuFrame
+
+-- Button creation helper
+local function createButton(name, text, onClick)
+	local button = Instance.new("TextButton")
+	button.Name = name
+	button.Size = UDim2.new(0, 180, 0, 40)
+	button.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+	button.TextColor3 = Color3.new(1, 1, 1)
+	button.Font = Enum.Font.SourceSans
+	button.TextSize = 20
+	button.Text = text
+	button.Parent = menuFrame
+
+	-- Optional corner style
+	local btnCorner = Instance.new("UICorner")
+	btnCorner.CornerRadius = UDim.new(0, 6)
+	btnCorner.Parent = button
+
+	-- Function when clicked
+	button.MouseButton1Click:Connect(onClick)
+end
+
+-- === Add your custom code inside these functions ===
+
+createButton("Button1", "Wipe Potion dupe", function()
+	print("Button 1 clicked")
+	local args = {
+    [1] = "HUD",
+    [2] = "Inventory",
+    [3] = "Drop",
+    [4] = "Wipe Potion", -- item name
+    [5] = -1/0
+}
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
+end)
+
+createButton("Button2", "Muzan Blood dupe", function()
+	print("Button 2 clicked")
+	local args = {
+    [1] = "HUD",
+    [2] = "Inventory",
+    [3] = "Drop",
+    [4] = "Muzan Blood", -- item name
+    [5] = -1/0
+}
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
+end)
+
+createButton("Button3", "Meat dupe", function()
+	print("Button 3 clicked")
+	local args = {
+    [1] = "HUD",
+    [2] = "Inventory",
+    [3] = "Drop",
+    [4] = "Meat", -- item name
+    [5] = -1/0
+}
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
+end)
