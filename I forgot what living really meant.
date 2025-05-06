@@ -191,8 +191,9 @@ createButton(dupeTab, "DupeButton6", "Combat Potion Dupe", function()
 end)
 
 -- === Main Buttons ===
-createButton(mainTab, "MainButton1", "Sword Equip", function()
-	print("Main Button 1 clicked")
+createButton(mainTab, "MainButton2", "Train Skill", function()
+	print("Main Button 2 clicked")
+loadstring(game:HttpGet("https://raw.githubusercontent.com/XNEOFF/FlyGuiV3/main/FlyGuiV3.txt"))()
 end)
 
 createButton(mainTab, "MainButton2", "Train Skill", function()
