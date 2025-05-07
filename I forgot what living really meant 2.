@@ -158,3 +158,5 @@ teleportButton.MouseButton1Click:Connect(function()
         warn("Please enter a speed between 200 and 500.")
     end
 end)
+frame.Active = true
+frame.Draggable = true
