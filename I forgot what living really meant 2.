@@ -2,7 +2,7 @@ local player = game:GetService("Players").LocalPlayer
 local destination = Vector3.new(-5200.28, 792.62, -3045.08)
 local speed = 30
 
--- Noclip function
+-- Enables noclip by disabling collisions on all parts
 local function enableNoclip(character)
     for _, part in ipairs(character:GetDescendants()) do
         if part:IsA("BasePart") then
@@ -11,18 +11,45 @@ local function enableNoclip(character)
     end
 end
 
--- Movement function
+-- Enables "flying" by zeroing gravity for the character
+local function enableFlight(character)
+    local hrp = character:FindFirstChild("HumanoidRootPart")
+    if not hrp then return end
+
+    -- Add BodyVelocity to counter gravity and allow hovering/flying
+    local bv = Instance.new("BodyVelocity")
+    bv.Name = "FlightVelocity"
+    bv.Velocity = Vector3.new(0, 0, 0)
+    bv.MaxForce = Vector3.new(1e5, 1e5, 1e5)
+    bv.P = 1e5
+    bv.Parent = hrp
+end
+
+-- Remove any existing flight forces
+local function cleanupFlight(character)
+    local hrp = character:FindFirstChild("HumanoidRootPart")
+    if hrp then
+        local existing = hrp:FindFirstChild("FlightVelocity")
+        if existing then
+            existing:Destroy()
+        end
+    end
+end
+
+-- Moves the character toward the destination with flight and noclip
 local function moveToDestination(hrp)
     local runService = game:GetService("RunService")
 
     local connection
     connection = runService.RenderStepped:Connect(function(dt)
         enableNoclip(hrp.Parent)
+        enableFlight(hrp.Parent)
 
         local direction = destination - hrp.Position
         local distance = direction.Magnitude
 
         if distance < 1 then
+            cleanupFlight(hrp.Parent)
             connection:Disconnect()
             return
         end
@@ -32,18 +59,18 @@ local function moveToDestination(hrp)
     end)
 end
 
--- Wait for character and start teleport
+-- Waits for the character and begins the teleport
 local function startTeleport()
     local character = player.Character or player.CharacterAdded:Wait()
     local hrp = character:WaitForChild("HumanoidRootPart")
     moveToDestination(hrp)
 end
 
--- Ensure teleport starts when character loads
+-- Start teleport when the character spawns
 if player.Character then
     startTeleport()
 end
 player.CharacterAdded:Connect(function()
-    wait(1) -- small delay to allow character to load
+    wait(1) -- small delay for load safety
     startTeleport()
 end)
