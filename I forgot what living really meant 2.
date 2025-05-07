@@ -1,6 +1,8 @@
 local player = game:GetService("Players").LocalPlayer
 local destination = Vector3.new(-5200.28, 792.62, -3045.08)
-local speed = 200
+local speed = 200 -- updated speed
+local hasTeleported = false -- flag to check if teleport has already occurred
+
 -- Enable noclip
 local function enableNoclip(character)
     for _, part in ipairs(character:GetDescendants()) do
@@ -50,6 +52,12 @@ local function moveToDestination(hrp)
     local connection
 
     connection = runService.RenderStepped:Connect(function(dt)
+        -- If teleport has already occurred, do nothing
+        if hasTeleported then
+            connection:Disconnect()
+            return
+        end
+
         enableNoclip(character)
         enableFlight(character)
 
@@ -59,6 +67,7 @@ local function moveToDestination(hrp)
         if distance <= 1 then
             -- Snap position, begin termination countdown
             hrp.CFrame = CFrame.new(destination)
+            hasTeleported = true -- Mark teleport as done
             connection:Disconnect()
 
             task.delay(3, function()
@@ -82,6 +91,8 @@ end
 
 -- Start teleport
 local function startTeleport()
+    if hasTeleported then return end -- Prevent running the script again if already teleported
+
     local character = player.Character or player.CharacterAdded:Wait()
     local hrp = character:WaitForChild("HumanoidRootPart")
     moveToDestination(hrp)
