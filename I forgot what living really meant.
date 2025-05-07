@@ -272,7 +272,7 @@ end)
 
 
 
-createButton(miscTab, "MiscButton2", "Misc Action 2", function()
+createButton(miscTab, "MiscButton2", "Okuyia Village TP", function()
 	print("Misc Button 2 clicked")
 loadstring(game:HttpGet("https://raw.githubusercontent.com/jamesneighbourhood2013/Oh-a-dollar/refs/heads/main/THIS%20IS%20SIGMA"))()
 end)
