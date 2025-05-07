@@ -7,43 +7,93 @@ screenGui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGu
 -- Create Frame (Menu container)
 local menuFrame = Instance.new("Frame")
 menuFrame.Name = "MenuFrame"
-menuFrame.Size = UDim2.new(0, 230, 0, 340)
-menuFrame.Position = UDim2.new(0, 15, 0, 15)
-menuFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+menuFrame.Size = UDim2.new(0, 300, 0, 400)
+menuFrame.Position = UDim2.new(0, 10, 0, 10)
+menuFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 30) -- Navy Blue
 menuFrame.BorderSizePixel = 0
 menuFrame.Active = true
 menuFrame.Draggable = true
 menuFrame.Parent = screenGui
 
--- Rounded corners
-local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(0, 8)
-corner.Parent = menuFrame
+local menuCorner = Instance.new("UICorner")
+menuCorner.CornerRadius = UDim.new(0, 12)
+menuCorner.Parent = menuFrame
+
+-- Create Hide/Show Button
+local toggleButton = Instance.new("TextButton")
+toggleButton.Size = UDim2.new(0, 40, 0, 40)
+toggleButton.Position = UDim2.new(1, -45, 0, 5)
+toggleButton.Text = "≡"
+toggleButton.BackgroundColor3 = Color3.fromRGB(255, 215, 0) -- Gold
+toggleButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+toggleButton.Font = Enum.Font.SourceSansBold
+toggleButton.TextSize = 22
+toggleButton.Parent = menuFrame
+
+local toggleCorner = Instance.new("UICorner")
+toggleCorner.CornerRadius = UDim.new(1, 0)
+toggleCorner.Parent = toggleButton
+
+local visible = true
+
+local function toggleMenu()
+	visible = not visible
+	menuFrame.Visible = visible
+end
+
+toggleButton.MouseButton1Click:Connect(toggleMenu)
+
+-- Keyboard shortcut
+local UIS = game:GetService("UserInputService")
+UIS.InputBegan:Connect(function(input, gpe)
+	if not gpe and input.KeyCode == Enum.KeyCode.Delete then
+		toggleMenu()
+	end
+end)
+
+-- Exit Button
+local exitButton = Instance.new("TextButton")
+exitButton.Size = UDim2.new(0, 30, 0, 30)
+exitButton.Position = UDim2.new(1, -35, 0, 5)
+exitButton.Text = "X"
+exitButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+exitButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+exitButton.Font = Enum.Font.SourceSansBold
+exitButton.TextSize = 18
+exitButton.Parent = menuFrame
+
+local exitCorner = Instance.new("UICorner")
+exitCorner.CornerRadius = UDim.new(1, 0)
+exitCorner.Parent = exitButton
+
+exitButton.MouseButton1Click:Connect(function()
+	screenGui:Destroy()
+	script:Destroy()
+end)
 
 -- Tab Buttons Container
 local tabContainer = Instance.new("Frame")
 tabContainer.Name = "TabContainer"
-tabContainer.Size = UDim2.new(1, 0, 0, 40)
-tabContainer.BackgroundTransparency = 1
+tabContainer.Size = UDim2.new(0, 80, 1, 0)
+tabContainer.Position = UDim2.new(0, 0, 0, 0)
+tabContainer.BackgroundColor3 = Color3.fromRGB(15, 15, 50)
+tabContainer.BorderSizePixel = 0
 tabContainer.Parent = menuFrame
 
--- Tab Buttons Layout
 local tabLayout = Instance.new("UIListLayout")
-tabLayout.FillDirection = Enum.FillDirection.Horizontal
+tabLayout.FillDirection = Enum.FillDirection.Vertical
 tabLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 tabLayout.SortOrder = Enum.SortOrder.LayoutOrder
 tabLayout.Padding = UDim.new(0, 5)
 tabLayout.Parent = tabContainer
 
--- Create Button Panel
 local buttonPanel = Instance.new("Frame")
 buttonPanel.Name = "ButtonPanel"
-buttonPanel.Size = UDim2.new(1, 0, 1, -50)
-buttonPanel.Position = UDim2.new(0, 0, 0, 45)
+buttonPanel.Size = UDim2.new(1, -90, 1, -10)
+buttonPanel.Position = UDim2.new(0, 90, 0, 5)
 buttonPanel.BackgroundTransparency = 1
 buttonPanel.Parent = menuFrame
 
--- Function to create tab buttons
 local tabs = {}
 local currentTab = nil
 
@@ -57,9 +107,9 @@ end
 local function createTab(name)
 	local button = Instance.new("TextButton")
 	button.Name = name .. "Tab"
-	button.Size = UDim2.new(0, 60, 1, 0)
-	button.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-	button.TextColor3 = Color3.new(1, 1, 1)
+	button.Size = UDim2.new(1, -10, 0, 30)
+	button.BackgroundColor3 = Color3.fromRGB(255, 215, 0)
+	button.TextColor3 = Color3.new(0, 0, 0)
 	button.Font = Enum.Font.SourceSansBold
 	button.TextSize = 16
 	button.Text = name
@@ -93,7 +143,6 @@ local function createTab(name)
 	return container
 end
 
--- Button creation helper
 local function createButton(parent, name, text, onClick)
 	local button = Instance.new("TextButton")
 	button.Name = name
@@ -112,134 +161,127 @@ local function createButton(parent, name, text, onClick)
 	button.MouseButton1Click:Connect(onClick)
 end
 
--- === Create Tabs ===
+-- === Tabs ===
 local dupeTab = createTab("Dupe")
 local mainTab = createTab("Main")
 local miscTab = createTab("Misc")
 
 -- === Dupe Buttons ===
 createButton(dupeTab, "DupeButton1", "Wipe Potion Dupe", function()
-	print("Button 1 clicked")
-	local args = {
-		[1] = "HUD",
-		[2] = "Inventory",
-		[3] = "Drop",
-		[4] = "Wipe Potion",
-		[5] = -1/0
-	}
-	game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
+	print("Dupe Button 1 clicked")
+			[1] = "HUD",
+			[2] = "Inventory",
+			[3] = "Drop",
+			[4] = Wipe Potion,
+			[5] = -1/0
+		}
+		game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
 end)
 
 createButton(dupeTab, "DupeButton2", "Muzan Blood Dupe", function()
-	print("Button 2 clicked")
-	local args = {
-		[1] = "HUD",
-		[2] = "Inventory",
-		[3] = "Drop",
-		[4] = "Muzan Blood",
-		[5] = -1/0
-	}
-	game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
+	print("Dupe Button 2 clicked")
+			[1] = "HUD",
+			[2] = "Inventory",
+			[3] = "Drop",
+			[4] = Muzan Blood,
+			[5] = -1/0
+		}
+		game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
 end)
 
-createButton(dupeTab, "DupeButton3", "Meat Dupe", function()
-	print("Button 3 clicked")
-	local args = {
-		[1] = "HUD",
-		[2] = "Inventory",
-		[3] = "Drop",
-		[4] = "Meat",
-		[5] = -1/0
-	}
-	game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
+createButton(dupeTab, "DupeButton3", "Premium Meat Dupe", function()
+	print("Dupe Button 3 clicked")
+			[1] = "HUD",
+			[2] = "Inventory",
+			[3] = "Drop",
+			[4] = Premium Meat,
+			[5] = -1/0
+		}
+		game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
 end)
 
-createButton(dupeTab, "DupeButton4", "Premium Meat Dupe", function()
-	print("Button 4 clicked")
-	local args = {
-		[1] = "HUD",
-		[2] = "Inventory",
-		[3] = "Drop",
-		[4] = "Premium Meat",
-		[5] = -1/0
-	}
-	game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
+createButton(dupeTab, "DupeButton4", "Breath Indict Dupe", function()
+	print("Dupe Button 4 clicked")
+			[1] = "HUD",
+			[2] = "Inventory",
+			[3] = "Drop",
+			[4] = Breath Indict,
+			[5] = -1/0
+		}
+		game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
 end)
 
 createButton(dupeTab, "DupeButton5", "Perfect Crystal Dupe", function()
-	print("Button 5 clicked")
-	local args = {
-		[1] = "HUD",
-		[2] = "Inventory",
-		[3] = "Drop",
-		[4] = "Perfect Crystal",
-		[5] = -1/0
-	}
-	game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
+	print("Dupe Button 5 clicked")
+			[1] = "HUD",
+			[2] = "Inventory",
+			[3] = "Drop",
+			[4] = Perfect Crystal,
+			[5] = -1/0
+		}
+		game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
 end)
 
-createButton(dupeTab, "DupeButton6", "Combat Potion Dupe", function()
-	print("Button 6 clicked")
-	local args = {
-		[1] = "HUD",
-		[2] = "Inventory",
-		[3] = "Drop",
-		[4] = "Combat Potion",
-		[5] = -1/0
-	}
-	game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
+createButton(dupeTab, "DupeButton6", "Sun Ore Dupe", function()
+	print("Dupe Button 6 clicked")
+			[1] = "HUD",
+			[2] = "Inventory",
+			[3] = "Drop",
+			[4] = Sun Ore,
+			[5] = -1/0
+		}
+		game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
 end)
 
 -- === Main Buttons ===
-createButton(mainTab, "MainButton1", "Fly Script", function()
+createButton(mainTab, "MainButton1", "Main Action 1", function()
 	print("Main Button 1 clicked")
-loadstring(game:HttpGet("https://raw.githubusercontent.com/XNEOFF/FlyGuiV3/main/FlyGuiV3.txt"))()
 end)
 
-createButton(mainTab, "MainButton2", "Train Skill", function()
+createButton(mainTab, "MainButton2", "Main Action 2", function()
 	print("Main Button 2 clicked")
 end)
 
-createButton(mainTab, "MainButton3", "Use Elixir", function()
+createButton(mainTab, "MainButton3", "Main Action 3", function()
 	print("Main Button 3 clicked")
 end)
 
-createButton(mainTab, "MainButton4", "Join Party", function()
+createButton(mainTab, "MainButton4", "Main Action 4", function()
 	print("Main Button 4 clicked")
 end)
 
-createButton(mainTab, "MainButton5", "Accept Quest", function()
+createButton(mainTab, "MainButton5", "Main Action 5", function()
 	print("Main Button 5 clicked")
 end)
 
-createButton(mainTab, "MainButton6", "Fast Travel", function()
+createButton(mainTab, "MainButton6", "Main Action 6", function()
 	print("Main Button 6 clicked")
 end)
 
 -- === Misc Buttons ===
-createButton(miscTab, "MiscButton1", "Misc1", function()
+createButton(miscTab, "MiscButton1", "Misc Action 1", function()
 	print("Misc Button 1 clicked")
 end)
 
-createButton(miscTab, "MiscButton2", "Misc2", function()
+createButton(miscTab, "MiscButton2", "Misc Action 2", function()
 	print("Misc Button 2 clicked")
 end)
 
-createButton(miscTab, "MiscButton3", "Misc3", function()
+createButton(miscTab, "MiscButton3", "Misc Action 3", function()
 	print("Misc Button 3 clicked")
 end)
 
-createButton(miscTab, "MiscButton4", "Misc4", function()
+createButton(miscTab, "MiscButton4", "Misc Action 4", function()
 	print("Misc Button 4 clicked")
 end)
 
-createButton(miscTab, "MiscButton5", "Misc5", function()
+createButton(miscTab, "MiscButton5", "Misc Action 5", function()
 	print("Misc Button 5 clicked")
 end)
 
-createButton(miscTab, "MiscButton6", "Misc6", function()
+createButton(miscTab, "MiscButton6", "Misc Action 6", function()
 	print("Misc Button 6 clicked")
 end)
 
 -- Set default tab
-switchTab("Main")
+switchTab("Dupe")
