@@ -167,70 +167,76 @@ local mainTab = createTab("Main")
 local miscTab = createTab("Misc")
 
 -- === Dupe Buttons ===
-createButton(dupeTab, "DupeButton1", "Wipe Potion Dupe", function()
+createButton(dupeTab, "DupeButton1", "Dupe Wipe Potion", function()
 	print("Dupe Button 1 clicked")
-			[1] = "HUD",
-			[2] = "Inventory",
-			[3] = "Drop",
-			[4] = Wipe Potion,
-			[5] = -1/0
-		}
-		game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
+    	local args = {
+		[1] = "HUD",
+		[2] = "Inventory",
+		[3] = "Drop",
+		[4] = "Wipe Potion",
+		[5] = -1/0
+	}
+	game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
 end)
 
-createButton(dupeTab, "DupeButton2", "Muzan Blood Dupe", function()
+createButton(dupeTab, "DupeButton2", "Dupe Breath Indict", function()
 	print("Dupe Button 2 clicked")
-			[1] = "HUD",
-			[2] = "Inventory",
-			[3] = "Drop",
-			[4] = Muzan Blood,
-			[5] = -1/0
-		}
-		game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
+    	local args = {
+		[1] = "HUD",
+		[2] = "Inventory",
+		[3] = "Drop",
+		[4] = "Breath Indict",
+		[5] = -1/0
+	}
+	game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
 end)
 
-createButton(dupeTab, "DupeButton3", "Premium Meat Dupe", function()
+createButton(dupeTab, "DupeButton3", "Dupe Muzan Blood", function()
 	print("Dupe Button 3 clicked")
-			[1] = "HUD",
-			[2] = "Inventory",
-			[3] = "Drop",
-			[4] = Premium Meat,
-			[5] = -1/0
-		}
-		game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
+    	local args = {
+		[1] = "HUD",
+		[2] = "Inventory",
+		[3] = "Drop",
+		[4] = "Muzan Blood",
+		[5] = -1/0
+	}
+	game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
 end)
 
-createButton(dupeTab, "DupeButton4", "Breath Indict Dupe", function()
+createButton(dupeTab, "DupeButton4", "Dupe Premium Meat", function()
 	print("Dupe Button 4 clicked")
-			[1] = "HUD",
-			[2] = "Inventory",
-			[3] = "Drop",
-			[4] = Breath Indict,
-			[5] = -1/0
-		}
-		game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
+    	local args = {
+		[1] = "HUD",
+		[2] = "Inventory",
+		[3] = "Drop",
+		[4] = "Premium Meat",
+		[5] = -1/0
+	}
+	game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
 end)
 
-createButton(dupeTab, "DupeButton5", "Perfect Crystal Dupe", function()
+createButton(dupeTab, "DupeButton5", "Dupe Sun Ore", function()
 	print("Dupe Button 5 clicked")
-			[1] = "HUD",
-			[2] = "Inventory",
-			[3] = "Drop",
-			[4] = Perfect Crystal,
-			[5] = -1/0
-		}
-		game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
+    	local args = {
+		[1] = "HUD",
+		[2] = "Inventory",
+		[3] = "Drop",
+		[4] = "Sun Ore",
+		[5] = -1/0
+	}
+	game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
 end)
 
-createButton(dupeTab, "DupeButton6", "Sun Ore Dupe", function()
+createButton(dupeTab, "DupeButton6", "Dupe Perfect Crystal", function()
 	print("Dupe Button 6 clicked")
-			[1] = "HUD",
-			[2] = "Inventory",
-			[3] = "Drop",
-			[4] = Sun Ore,
-			[5] = -1/0
-		}
-		game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
+    	local args = {
+		[1] = "HUD",
+		[2] = "Inventory",
+		[3] = "Drop",
+		[4] = "Perfect Crystal",
+		[5] = -1/0
+	}
+	game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Sync"):InvokeServer(unpack(args))
 end)
 
 -- === Main Buttons ===
