@@ -1,0 +1,197 @@
+local player = game:GetService("Players").LocalPlayer
+local destination = Vector3.new(-3623.40, 717.82, -1010.96)
+
+-- Create the UI elements (TextBox, Button, TextLabel)
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = player.PlayerGui
+
+-- Create a frame with rounded corners
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 400, 0, 280)
+frame.Position = UDim2.new(0.5, -200, 0.5, -140)
+frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+frame.BorderSizePixel = 0
+frame.BackgroundTransparency = 0 -- Background completely opaque
+frame.Parent = screenGui
+
+-- Adding a more vibrant, multi-color gradient background
+local gradient = Instance.new("UIGradient")
+gradient.Color = ColorSequence.new(
+    Color3.fromRGB(255, 0, 0),  -- Red
+    Color3.fromRGB(255, 255, 0),  -- Yellow
+    Color3.fromRGB(0, 255, 0),  -- Green
+    Color3.fromRGB(0, 255, 255),  -- Cyan
+    Color3.fromRGB(0, 0, 255),  -- Blue
+    Color3.fromRGB(255, 0, 255)   -- Purple
+)
+gradient.Parent = frame
+
+-- Add rounded corners to the frame
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 20)
+corner.Parent = frame
+
+-- Label for the speed input (Now Grey Text)
+local speedLabel = Instance.new("TextLabel")
+speedLabel.Size = UDim2.new(1, 0, 0, 30)
+speedLabel.Position = UDim2.new(0, 0, 0, 10)
+speedLabel.Text = "Enter Teleport Speed (200 - 500)"
+speedLabel.TextColor3 = Color3.fromRGB(169, 169, 169)  -- Grey text
+speedLabel.TextSize = 18
+speedLabel.BackgroundTransparency = 1
+speedLabel.Parent = frame
+
+-- TextBox for inputting the speed
+local speedInput = Instance.new("TextBox")
+speedInput.Size = UDim2.new(1, -50, 0, 40)
+speedInput.Position = UDim2.new(0, 25, 0, 50)
+speedInput.Text = "200"
+speedInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+speedInput.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+speedInput.TextSize = 20
+speedInput.ClearTextOnFocus = true
+speedInput.Parent = frame
+
+-- Button to teleport (Blue button)
+local teleportButton = Instance.new("TextButton")
+teleportButton.Size = UDim2.new(1, 0, 0, 40)
+teleportButton.Position = UDim2.new(0, 0, 0, 120)
+teleportButton.Text = "Teleport"
+teleportButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+teleportButton.BackgroundColor3 = Color3.fromRGB(0, 0, 255) -- Blue button
+teleportButton.TextSize = 20
+teleportButton.Parent = frame
+
+-- Exit button to close the UI (Red button)
+local exitButton = Instance.new("TextButton")
+exitButton.Size = UDim2.new(1, 0, 0, 40)
+exitButton.Position = UDim2.new(0, 0, 0, 180)
+exitButton.Text = "Exit"
+exitButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+exitButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0) -- Red button
+exitButton.TextSize = 20
+exitButton.Parent = frame
+
+-- Teleport and Noclip functions
+local hasTeleported = false
+
+local function enableNoclip(character)
+    for _, part in ipairs(character:GetDescendants()) do
+        if part:IsA("BasePart") then
+            part.CanCollide = false
+        end
+    end
+end
+
+local function enableFlight(character)
+    local hrp = character:FindFirstChild("HumanoidRootPart")
+    if not hrp then return end
+
+    if not hrp:FindFirstChild("FlightVelocity") then
+        local bv = Instance.new("BodyVelocity")
+        bv.Name = "FlightVelocity"
+        bv.Velocity = Vector3.new(0, 0, 0)
+        bv.MaxForce = Vector3.new(1e5, 1e5, 1e5)
+        bv.P = 1e5
+        bv.Parent = hrp
+    end
+end
+
+local function cleanupFlight(character)
+    local hrp = character:FindFirstChild("HumanoidRootPart")
+    if hrp then
+        local bv = hrp:FindFirstChild("FlightVelocity")
+        if bv then bv:Destroy() end
+    end
+end
+
+local function disableNoclip(character)
+    for _, part in ipairs(character:GetDescendants()) do
+        if part:IsA("BasePart") then
+            part.CanCollide = true
+        end
+    end
+end
+
+local function moveToDestination(hrp, speed)
+    local runService = game:GetService("RunService")
+    local character = hrp.Parent
+    local connection
+
+    connection = runService.RenderStepped:Connect(function(dt)
+        -- If teleport has already occurred, do nothing
+        if hasTeleported then
+            connection:Disconnect()
+            return
+        end
+
+        enableNoclip(character)
+        enableFlight(character)
+
+        local direction = destination - hrp.Position
+        local distance = direction.Magnitude
+
+        if distance <= 1 then
+            -- Snap position, begin termination countdown
+            hrp.CFrame = CFrame.new(destination)
+            hasTeleported = true -- Mark teleport as done
+            connection:Disconnect()
+
+            task.delay(3, function()
+                cleanupFlight(character)
+                disableNoclip(character)
+
+                -- Optional: destroy this script to terminate
+                local scriptInstance = script
+                if scriptInstance and scriptInstance:IsDescendantOf(game) then
+                    scriptInstance:Destroy()
+                end
+            end)
+
+            return
+        end
+
+        local step = math.min(speed * dt, distance)
+        hrp.CFrame = hrp.CFrame + direction.Unit * step
+    end)
+end
+
+local function startTeleport(speed)
+    if hasTeleported then return end -- Prevent running the script again if already teleported
+
+    local character = player.Character or player.CharacterAdded:Wait()
+    local hrp = character:WaitForChild("HumanoidRootPart")
+    moveToDestination(hrp, speed)
+end
+
+-- Handle Enter key to start teleport when speed is input
+speedInput.FocusLost:Connect(function(enterPressed)
+    if enterPressed then
+        local speed = tonumber(speedInput.Text)
+        if speed and speed >= 200 and speed <= 500 then
+            startTeleport(speed)
+            -- Remove the UI after teleportation begins
+            screenGui:Destroy()
+        else
+            warn("Please enter a speed between 200 and 500.")
+        end
+    end
+end)
+
+-- Start teleport when teleport button is clicked
+teleportButton.MouseButton1Click:Connect(function()
+    local speed = tonumber(speedInput.Text)
+    if speed and speed >= 200 and speed <= 500 then
+        startTeleport(speed)
+        -- Remove the UI after teleportation begins
+        screenGui:Destroy()
+    else
+        warn("Please enter a speed between 200 and 500.")
+    end
+end)
+
+-- Exit button to close the UI
+exitButton.MouseButton1Click:Connect(function()
+    -- Destroy the entire UI when the Exit button is pressed
+    screenGui:Destroy()
+end)
