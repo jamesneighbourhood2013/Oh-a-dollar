@@ -11,6 +11,9 @@ frame.Position = UDim2.new(0.5, -200, 0.5, -100)
 frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 frame.Parent = screenGui
 
+frame.Active = true
+frame.Draggable = true
+
 local speedLabel = Instance.new("TextLabel")
 speedLabel.Size = UDim2.new(1, 0, 0, 30)
 speedLabel.Position = UDim2.new(0, 0, 0, 10)
@@ -88,7 +91,6 @@ local function moveToDestination(hrp, speed)
     local connection
 
     connection = runService.RenderStepped:Connect(function(dt)
-        -- If teleport has already occurred, do nothing
         if hasTeleported then
             connection:Disconnect()
             return
@@ -101,16 +103,14 @@ local function moveToDestination(hrp, speed)
         local distance = direction.Magnitude
 
         if distance <= 1 then
-            -- Snap position, begin termination countdown
             hrp.CFrame = CFrame.new(destination)
-            hasTeleported = true -- Mark teleport as done
+            hasTeleported = true
             connection:Disconnect()
 
             task.delay(3, function()
                 cleanupFlight(character)
                 disableNoclip(character)
 
-                -- Optional: destroy this script to terminate
                 local scriptInstance = script
                 if scriptInstance and scriptInstance:IsDescendantOf(game) then
                     scriptInstance:Destroy()
@@ -126,20 +126,18 @@ local function moveToDestination(hrp, speed)
 end
 
 local function startTeleport(speed)
-    if hasTeleported then return end -- Prevent running the script again if already teleported
+    if hasTeleported then return end
 
     local character = player.Character or player.CharacterAdded:Wait()
     local hrp = character:WaitForChild("HumanoidRootPart")
     moveToDestination(hrp, speed)
 end
 
--- Handle Enter key to start teleport when speed is input
 speedInput.FocusLost:Connect(function(enterPressed)
     if enterPressed then
         local speed = tonumber(speedInput.Text)
         if speed and speed >= 200 and speed <= 500 then
             startTeleport(speed)
-            -- Remove the UI after teleportation begins
             screenGui:Destroy()
         else
             warn("Please enter a speed between 200 and 500.")
@@ -147,16 +145,12 @@ speedInput.FocusLost:Connect(function(enterPressed)
     end
 end)
 
--- Start teleport when teleport button is clicked
 teleportButton.MouseButton1Click:Connect(function()
     local speed = tonumber(speedInput.Text)
     if speed and speed >= 200 and speed <= 500 then
         startTeleport(speed)
-        -- Remove the UI after teleportation begins
         screenGui:Destroy()
     else
         warn("Please enter a speed between 200 and 500.")
     end
 end)
-frame.Active = true
-frame.Draggable = true
