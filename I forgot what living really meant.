@@ -277,8 +277,9 @@ createButton(miscTab, "MiscButton2", "Okuyia Village TP", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/jamesneighbourhood2013/Oh-a-dollar/refs/heads/main/THIS%20IS%20SIGMA"))()
 end)
 
-createButton(miscTab, "MiscButton3", "Misc Action 3", function()
+createButton(miscTab, "MiscButton3", "Slayer Corps", function()
 	print("Misc Button 3 clicked")
+loadstring(game:HttpGet("https://raw.githubusercontent.com/jamesneighbourhood2013/Oh-a-dollar/refs/heads/main/wow",true))()
 end)
 
 createButton(miscTab, "MiscButton4", "Misc Action 4", function()
