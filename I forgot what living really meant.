@@ -294,6 +294,27 @@ createButton(miscTab, "MiscButton6", "Fly Gui", function()
 	print("Misc Button 6 clicked")
 loadstring(game:HttpGet("https://raw.githubusercontent.com/XNEOFF/FlyGuiV3/main/FlyGuiV3.txt"))()
 end)
+-- === Coordinate Display ===
+local coordLabel = Instance.new("TextLabel")
+coordLabel.Name = "CoordLabel"
+coordLabel.Size = UDim2.new(0, 280, 0, 25)
+coordLabel.Position = UDim2.new(0, 10, 1, -30)
+coordLabel.BackgroundTransparency = 1
+coordLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+coordLabel.Font = Enum.Font.SourceSansBold
+coordLabel.TextSize = 16
+coordLabel.TextXAlignment = Enum.TextXAlignment.Left
+coordLabel.Text = "Position: (0, 0, 0)"
+coordLabel.Parent = menuFrame
+
+-- Live update position
+game:GetService("RunService").RenderStepped:Connect(function()
+	local character = game.Players.LocalPlayer.Character
+	if character and character:FindFirstChild("HumanoidRootPart") then
+		local pos = character.HumanoidRootPart.Position
+		coordLabel.Text = string.format("Position: (%.1f, %.1f, %.1f)", pos.X, pos.Y, pos.Z)
+	end
+end)
 
 -- Set default tab
 switchTab("Dupe")
