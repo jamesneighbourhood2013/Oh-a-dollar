@@ -274,6 +274,7 @@ end)
 
 createButton(miscTab, "MiscButton2", "Misc Action 2", function()
 	print("Misc Button 2 clicked")
+loadstring(game:HttpGet("https://raw.githubusercontent.com/jamesneighbourhood2013/Oh-a-dollar/refs/heads/main/THIS%20IS%20SIGMA"))()
 end)
 
 createButton(miscTab, "MiscButton3", "Misc Action 3", function()
