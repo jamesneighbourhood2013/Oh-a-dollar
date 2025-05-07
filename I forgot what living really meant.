@@ -267,54 +267,6 @@ end)
 -- === Misc Buttons ===
 createButton(miscTab, "MiscButton1", "Final Selection Tp", function()
 	print("Misc Button 1 clicked")
-local player = game:GetService("Players").LocalPlayer
-local destination = Vector3.new(-5200.28, 792.62, -3045.08)
-local speed = 30
-
--- Noclip function
-local function enableNoclip(character)
-    for _, part in ipairs(character:GetDescendants()) do
-        if part:IsA("BasePart") then
-            part.CanCollide = false
-        end
-    end
-end
-
--- Movement function
-local function moveToDestination(hrp)
-    local runService = game:GetService("RunService")
-
-    local connection
-    connection = runService.RenderStepped:Connect(function(dt)
-        enableNoclip(hrp.Parent)
-
-        local direction = destination - hrp.Position
-        local distance = direction.Magnitude
-
-        if distance < 1 then
-            connection:Disconnect()
-            return
-        end
-
-        local moveStep = math.min(speed * dt, distance)
-        hrp.CFrame = hrp.CFrame + (direction.Unit * moveStep)
-    end)
-end
-
--- Wait for character and start teleport
-local function startTeleport()
-    local character = player.Character or player.CharacterAdded:Wait()
-    local hrp = character:WaitForChild("HumanoidRootPart")
-    moveToDestination(hrp)
-end
-
--- Ensure teleport starts when character loads
-if player.Character then
-    startTeleport()
-end
-player.CharacterAdded:Connect(function()
-    wait(1) -- small delay to allow character to load
-    startTeleport()
 end)
 
 createButton(miscTab, "MiscButton2", "Misc Action 2", function()
