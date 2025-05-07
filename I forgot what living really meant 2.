@@ -1,7 +1,6 @@
 local player = game:GetService("Players").LocalPlayer
 local destination = Vector3.new(-5200.28, 792.62, -3045.08)
-local speed = 30
-
+local speed = 200
 -- Enable noclip
 local function enableNoclip(character)
     for _, part in ipairs(character:GetDescendants()) do
