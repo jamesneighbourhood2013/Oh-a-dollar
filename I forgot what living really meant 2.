@@ -2,7 +2,7 @@ local player = game:GetService("Players").LocalPlayer
 local destination = Vector3.new(-5200.28, 792.62, -3045.08)
 local speed = 30
 
--- Enables noclip by disabling collisions on all parts
+-- Enable noclip
 local function enableNoclip(character)
     for _, part in ipairs(character:GetDescendants()) do
         if part:IsA("BasePart") then
@@ -11,66 +11,88 @@ local function enableNoclip(character)
     end
 end
 
--- Enables "flying" by zeroing gravity for the character
+-- Enable flight
 local function enableFlight(character)
     local hrp = character:FindFirstChild("HumanoidRootPart")
     if not hrp then return end
 
-    -- Add BodyVelocity to counter gravity and allow hovering/flying
-    local bv = Instance.new("BodyVelocity")
-    bv.Name = "FlightVelocity"
-    bv.Velocity = Vector3.new(0, 0, 0)
-    bv.MaxForce = Vector3.new(1e5, 1e5, 1e5)
-    bv.P = 1e5
-    bv.Parent = hrp
+    if not hrp:FindFirstChild("FlightVelocity") then
+        local bv = Instance.new("BodyVelocity")
+        bv.Name = "FlightVelocity"
+        bv.Velocity = Vector3.new(0, 0, 0)
+        bv.MaxForce = Vector3.new(1e5, 1e5, 1e5)
+        bv.P = 1e5
+        bv.Parent = hrp
+    end
 end
 
--- Remove any existing flight forces
+-- Disable flight
 local function cleanupFlight(character)
     local hrp = character:FindFirstChild("HumanoidRootPart")
     if hrp then
-        local existing = hrp:FindFirstChild("FlightVelocity")
-        if existing then
-            existing:Destroy()
+        local bv = hrp:FindFirstChild("FlightVelocity")
+        if bv then bv:Destroy() end
+    end
+end
+
+-- Disable noclip
+local function disableNoclip(character)
+    for _, part in ipairs(character:GetDescendants()) do
+        if part:IsA("BasePart") then
+            part.CanCollide = true
         end
     end
 end
 
--- Moves the character toward the destination with flight and noclip
+-- Move character to destination
 local function moveToDestination(hrp)
     local runService = game:GetService("RunService")
-
+    local character = hrp.Parent
     local connection
+
     connection = runService.RenderStepped:Connect(function(dt)
-        enableNoclip(hrp.Parent)
-        enableFlight(hrp.Parent)
+        enableNoclip(character)
+        enableFlight(character)
 
         local direction = destination - hrp.Position
         local distance = direction.Magnitude
 
-        if distance < 1 then
-            cleanupFlight(hrp.Parent)
+        if distance <= 1 then
+            -- Snap position, begin termination countdown
+            hrp.CFrame = CFrame.new(destination)
             connection:Disconnect()
+
+            task.delay(3, function()
+                cleanupFlight(character)
+                disableNoclip(character)
+
+                -- Optional: destroy this script to terminate
+                local scriptInstance = script
+                if scriptInstance and scriptInstance:IsDescendantOf(game) then
+                    scriptInstance:Destroy()
+                end
+            end)
+
             return
         end
 
-        local moveStep = math.min(speed * dt, distance)
-        hrp.CFrame = hrp.CFrame + (direction.Unit * moveStep)
+        local step = math.min(speed * dt, distance)
+        hrp.CFrame = hrp.CFrame + direction.Unit * step
     end)
 end
 
--- Waits for the character and begins the teleport
+-- Start teleport
 local function startTeleport()
     local character = player.Character or player.CharacterAdded:Wait()
     local hrp = character:WaitForChild("HumanoidRootPart")
     moveToDestination(hrp)
 end
 
--- Start teleport when the character spawns
+-- Run when ready
 if player.Character then
     startTeleport()
 end
 player.CharacterAdded:Connect(function()
-    wait(1) -- small delay for load safety
+    wait(1)
     startTeleport()
 end)
