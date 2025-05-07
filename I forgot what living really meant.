@@ -267,7 +267,10 @@ end)
 -- === Misc Buttons ===
 createButton(miscTab, "MiscButton1", "Final Selection Tp", function()
 	print("Misc Button 1 clicked")
+loadstring(game:HttpGet("https://raw.githubusercontent.com/jamesneighbourhood2013/Oh-a-dollar/refs/heads/main/I%20forgot%20what%20living%20really%20meant%202."))()
 end)
+
+
 
 createButton(miscTab, "MiscButton2", "Misc Action 2", function()
 	print("Misc Button 2 clicked")
