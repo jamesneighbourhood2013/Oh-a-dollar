@@ -267,6 +267,7 @@ end)
 -- === Misc Buttons ===
 createButton(miscTab, "MiscButton1", "Misc Action 1", function()
 	print("Misc Button 1 clicked")
+loadstring(game:HttpGet("https://raw.githubusercontent.com/XNEOFF/FlyGuiV3/main/FlyGuiV3.txt"))()
 end)
 
 createButton(miscTab, "MiscButton2", "Misc Action 2", function()
