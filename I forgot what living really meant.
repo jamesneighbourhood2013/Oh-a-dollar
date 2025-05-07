@@ -164,7 +164,7 @@ end
 -- === Tabs ===
 local dupeTab = createTab("Dupe")
 local mainTab = createTab("Main")
-local miscTab = createTab("Misc")
+local miscTab = createTab("Teleport/Fly")
 
 -- === Dupe Buttons ===
 createButton(dupeTab, "DupeButton1", "Dupe Wipe Potion", function()
@@ -265,7 +265,7 @@ createButton(mainTab, "MainButton6", "Main Action 6", function()
 end)
 
 -- === Misc Buttons ===
-createButton(miscTab, "MiscButton1", "Misc Action 1", function()
+createButton(miscTab, "MiscButton1", "Final Selection Tp", function()
 	print("Misc Button 1 clicked")
 local player = game:GetService("Players").LocalPlayer
 local destination = Vector3.new(-5200.28, 792.62, -3045.08)
