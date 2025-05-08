@@ -272,7 +272,7 @@ end)
 
 
 
-createButton(miscTab, "MiscButton2", "Okuyia Village TP", function()
+createButton(miscTab, "MiscButton2", "Okuyia Village Tp", function()
 	print("Misc Button 2 clicked")
 loadstring(game:HttpGet("https://raw.githubusercontent.com/jamesneighbourhood2013/Oh-a-dollar/refs/heads/main/THIS%20IS%20SIGMA"))()
 end)
@@ -282,13 +282,14 @@ createButton(miscTab, "MiscButton3", "Slayer Corps", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/jamesneighbourhood2013/Oh-a-dollar/refs/heads/main/wow",true))()
 end)
 
-createButton(miscTab, "MiscButton4", "Ent District TP", function()
+createButton(miscTab, "MiscButton4", "Ent District Tp", function()
 	print("Misc Button 4 clicked")
 loadstring(game:HttpGet("https://raw.githubusercontent.com/jamesneighbourhood2013/Oh-a-dollar/refs/heads/main/crate",true))()
 end)
 
-createButton(miscTab, "MiscButton5", "Misc Action 5", function()
+createButton(miscTab, "MiscButton5", "Prestige Tp", function()
 	print("Misc Button 5 clicked")
+loadstring(game:HttpGet("https://raw.githubusercontent.com/jamesneighbourhood2013/Oh-a-dollar/refs/heads/main/wav",true))()
 end)
 
 createButton(miscTab, "MiscButton6", "Fly Gui", function()
